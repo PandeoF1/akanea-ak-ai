@@ -1,52 +1,56 @@
 services:
-  flowise:
-    image: flowiseai/flowise
-    container_name: flowise
-    restart: always
-    #environment:
-    #    - CORS_ORIGINS=${CORS_ORIGINS}
-    #    - IFRAME_ORIGINS=${IFRAME_ORIGINS}
-    #    - FLOWISE_USERNAME=${FLOWISE_USERNAME}
-    #    - FLOWISE_PASSWORD=${FLOWISE_PASSWORD}
-    #    - FLOWISE_FILE_SIZE_LIMIT=${FLOWISE_FILE_SIZE_LIMIT}
-    #    - DEBUG=${DEBUG}
-    #    - DATABASE_PATH=${DATABASE_PATH}
-    #    - DATABASE_TYPE=${DATABASE_TYPE}
-    #    - DATABASE_PORT=${DATABASE_PORT}
-    #    - DATABASE_HOST=${DATABASE_HOST}
-    #    - DATABASE_NAME=${DATABASE_NAME}
-    #    - DATABASE_USER=${DATABASE_USER}
-    #    - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-    #    - DATABASE_SSL=${DATABASE_SSL}
-    #    - DATABASE_SSL_KEY_BASE64=${DATABASE_SSL_KEY_BASE64}
-    #    - APIKEY_PATH=${APIKEY_PATH}
-    #    - SECRETKEY_PATH=${SECRETKEY_PATH}
-    #    - FLOWISE_SECRETKEY_OVERWRITE=${FLOWISE_SECRETKEY_OVERWRITE}
-    #    - LOG_LEVEL=${LOG_LEVEL}
-    #    - LOG_PATH=${LOG_PATH}
-    #    - BLOB_STORAGE_PATH=${BLOB_STORAGE_PATH}
-    #    - DISABLE_FLOWISE_TELEMETRY=${DISABLE_FLOWISE_TELEMETRY}
-    #    - MODEL_LIST_CONFIG_JSON=${MODEL_LIST_CONFIG_JSON}
-    ports:
-      - '3000:3000'
-    volumes:
-      - ~/.flowise:/root/.flowise
-    entrypoint: /bin/sh -c "sleep 3; flowise start"
-  postgres:
-    image: ankane/pgvector
-    container_name: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: flowise
-    ports:
-      - '5432:5432'
-    volumes:
-      - ./data:/var/lib/postgresql/data
-  redis:
-    image: redis
-    container_name: redis
-    restart: always
-    ports:
-      - '6379:6379'
+    flowise:
+        image: flowiseai/flowise
+        container_name: flowise
+        restart: always
+        environment:
+            - DEBUG=true
+            - LOG_LEVEL=debug
+            - DATABASE_PATH=/root/.flowise
+            - APIKEY_PATH=/root/.flowise
+            - LOG_PATH=/root/.flowise/logs
+            - SECRETKEY_PATH=/root/.flowise
+            - BLOB_STORAGE_PATH=/root/.flowise/storage
+        #    - CORS_ORIGINS=${CORS_ORIGINS}
+        #    - IFRAME_ORIGINS=${IFRAME_ORIGINS}
+        #    - FLOWISE_USERNAME=${FLOWISE_USERNAME}
+        #    - FLOWISE_PASSWORD=${FLOWISE_PASSWORD}
+        #    - FLOWISE_FILE_SIZE_LIMIT=${FLOWISE_FILE_SIZE_LIMIT}
+        #    - DATABASE_PATH=${DATABASE_PATH}
+        #    - DATABASE_TYPE=${DATABASE_TYPE}
+        #    - DATABASE_PORT=${DATABASE_PORT}
+        #    - DATABASE_HOST=${DATABASE_HOST}
+        #    - DATABASE_NAME=${DATABASE_NAME}
+        #    - DATABASE_USER=${DATABASE_USER}
+        #    - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        #    - DATABASE_SSL=${DATABASE_SSL}
+        #    - DATABASE_SSL_KEY_BASE64=${DATABASE_SSL_KEY_BASE64}
+        #    - APIKEY_PATH=${APIKEY_PATH}
+        #    - SECRETKEY_PATH=${SECRETKEY_PATH}
+        #    - FLOWISE_SECRETKEY_OVERWRITE=${FLOWISE_SECRETKEY_OVERWRITE}
+        #    - LOG_LEVEL=${LOG_LEVEL}
+        #    - LOG_PATH=${LOG_PATH}
+        #    - BLOB_STORAGE_PATH=${BLOB_STORAGE_PATH}
+        #    - DISABLE_FLOWISE_TELEMETRY=${DISABLE_FLOWISE_TELEMETRY}
+        #    - MODEL_LIST_CONFIG_JSON=${MODEL_LIST_CONFIG_JSON}
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./flowise:/root/.flowise
+        entrypoint: /bin/sh -c "sleep 3; flowise start"
+    postgres:
+      image: ankane/pgvector
+      container_name: postgres
+      restart: always
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: flowise
+      ports:
+        - '5432:5432'
+      volumes:
+        - ./pgsql5:/var/lib/postgresql/data
+    redis:
+      image: redis
+      container_name: redis
+      restart: always
