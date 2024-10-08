@@ -1,3 +1,5 @@
 **flowise**
 **storage**
 **pgsql**
+venv
+__pycache__
